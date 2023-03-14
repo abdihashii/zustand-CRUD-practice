@@ -106,10 +106,14 @@ function App() {
         <section>
           <h1 className="text-3xl font-semibold">Finished</h1>
           <hr className="border-2 border-black mt-2 mb-6" />
-          {state.finishedItems.map((todoItem) => {
+          {state.finishedItems.map((todoItem, index) => {
             return (
               <div key={todoItem.id}>
                 <p className="line-through">{todoItem.title}</p>
+                <input
+                  type="checkbox"
+                  onClick={() => state.unfinishTodo(todoItem, index)}
+                />
               </div>
             );
           })}

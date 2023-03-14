@@ -1,36 +1,37 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTodoStore } from "./hooks/useTodoStore";
 
 const AddTodoSection = () => {
-  const addTodo = useTodoStore((state) => state.addTodo)
-  const [todoItem, setTodoItem] = useState('');
+  const addTodo = useTodoStore((state) => state.addTodo);
+  const inputRef = useRef<any>();
+
+  const addTodoItem = () => {
+    addTodo(inputRef.current.value);
+    inputRef.current.value = "";
+  };
 
   return (
     <div className="flex flex-row gap-2">
-      <input 
+      <input
         className="border-2 border-gray-300 p-2 rounded-md"
-        onChange={(e) => setTodoItem(e.target.value)} 
-        value={todoItem} 
-        type="text" 
+        type="text"
+        ref={inputRef}
       />
 
-      <button 
+      <button
         className="bg-blue-500 text-white p-2 rounded-md border-2 border-blue-500"
-        onClick={() => addTodo(todoItem)}
+        onClick={addTodoItem}
       >
         Add todo
       </button>
     </div>
-  )
-}
+  );
+};
 
 function App() {
-  const todoItems = useTodoStore((state) => state.todoItems);
-  const removeTodo = useTodoStore((state) => state.removeTodo);
-  const editTodo = useTodoStore((state) => state.editTodo);
-  const saveTodo = useTodoStore((state) => state.saveTodo);
+  const state = useTodoStore((state) => state);
 
-  const [todoTitle, setTodoTitle] = useState('');
+  const [todoTitle, setTodoTitle] = useState("");
 
   return (
     <main className="mt-32 flex flex-col w-6/12 mx-auto gap-4">
@@ -41,10 +42,15 @@ function App() {
       </section>
 
       <section>
-        {todoItems.map((todoItem) => {
+        {state.todoItems.map((todoItem) => {
           return (
-            <div key={todoItem.id} className="flex flex-row items-center gap-4 mb-4 last:mb-0">
-              {!todoItem.isEditable ? <p>{todoItem.title}</p> : (
+            <div
+              key={todoItem.id}
+              className="flex flex-row items-center gap-4 mb-4 last:mb-0"
+            >
+              {!todoItem.isEditable ? (
+                <p>{todoItem.title}</p>
+              ) : (
                 <input
                   className="border-2 border-gray-300 p-2 rounded-md"
                   onChange={(e) => setTodoTitle(e.target.value)}
@@ -52,28 +58,31 @@ function App() {
                   type="text"
                 />
               )}
-              
+
               {!todoItem.isEditable ? (
-                <span 
-                className="bg-yellow-500 text-white p-2 rounded-md cursor-pointer"
-                onClick={() => editTodo(todoItem)}>
+                <span
+                  className="bg-yellow-500 text-white p-2 rounded-md cursor-pointer"
+                  onClick={() => state.editTodo(todoItem)}
+                >
                   edit
                 </span>
               ) : (
-                <span 
-                className="bg-green-500 text-white p-2 rounded-md cursor-pointer"
-                onClick={() => saveTodo(todoTitle, todoItem)}>
+                <span
+                  className="bg-green-500 text-white p-2 rounded-md cursor-pointer"
+                  onClick={() => state.saveTodo(todoTitle, todoItem)}
+                >
                   save
                 </span>
               )}
 
-              <span 
+              <span
                 className="bg-red-500 text-white p-2 rounded-md cursor-pointer"
-                onClick={() => removeTodo(todoItem)}>
-                  remove
+                onClick={() => state.removeTodo(todoItem)}
+              >
+                remove
               </span>
             </div>
-          )
+          );
         })}
       </section>
     </main>

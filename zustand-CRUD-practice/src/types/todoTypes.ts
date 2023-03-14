@@ -12,4 +12,5 @@ export type TodoStateType = {
   saveTodo: (todoTitle: string, todoItem: Todo) => void;
   removeTodo: (todoItem: Todo) => void;
   finishTodo: (todoItem: Todo, index: number) => void;
+  unfinishTodo: (todoItem: Todo, index: number) => void;
 };

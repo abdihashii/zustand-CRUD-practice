@@ -93,6 +93,21 @@ export const useTodoStore = create<TodoStateType>((set) => ({
         finishedItems: newFinishedItems,
       };
     }),
+  unfinishTodo: (todoItem, index) => {
+    set((state) => {
+      const newFinishedItems = [...state.finishedItems];
+
+      newFinishedItems.splice(index, 1);
+
+      const newTodoItems = [...state.todoItems, todoItem];
+
+      return {
+        ...state,
+        todoItems: newTodoItems,
+        finishedItems: newFinishedItems,
+      };
+    });
+  },
 }));
 
 // const setEditTodo = (set: any) => (todoItem: Todo) => {
